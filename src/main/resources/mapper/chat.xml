@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.friendbe.chatMessage.ChatRepository">
+	<select id='chatList' resultType='com.example.friendbe.chatMessage.dto.ChatRoom'>
+		<!-- select * from chat_room where member_host = #{memberId}; -->
+		select cr.chat_room_no, cr.title, cr.member_host from chat_room cr join chat_room_join crj on cr.title = crj.title where crj.member_guest like #{memberId} or cr.member_host like #{memberId} group by cr.chat_room_no, cr.title, cr.member_host;
+	</select>
+	<insert id='insertChat' parameterType='com.example.friendbe.chatMessage.dto.ChatMessage'>
+		insert into chat_message(title, message, member_id, member_nickname, create_date) values (#{title}, #{message}, #{memberId}, #{memberNickname}, #{createDate});
+	</insert>
+	<select id='chatMessageList' resultType='com.example.friendbe.chatMessage.dto.ChatMessage'>
+		select member_nickname, message, create_date, member_id, title from chat_message where title = #{title};
+	</select>
+	<insert id='insertChatRoom' parameterType='com.example.friendbe.chatMessage.dto.ChatRoom'>
+		insert into chat_room(title, member_host) values(#{title}, #{memberHost});
+	</insert>
+	<insert id='insertChatRoomJoin' parameterType='com.example.friendbe.chatMessage.dto.ChatRoomJoin'>
+		insert into chat_room_join (member_guest, title) values(#{memberGuest}, #{title});
+	</insert>
+</mapper>

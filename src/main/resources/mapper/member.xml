@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.friendbe.member.repository.MemberRepository">
+
+	<select id="login" resultType="boolean">
+		select count(*)
+		from member_tb
+		where member_id = #{memberId} and member_pw = #{memberPw};
+	</select>
+	<select id="search" resultType="com.example.friendbe.member.dto.MemberDto">
+	select * 
+	from member_tb 
+	where member_nickname like CONCAT('%', #{searchNickname}, '%') 
+	or member_id like CONCAT('%', #{searchId}, '%') and NOT member_id = #{memberId};
+	</select>
+	<select id="findById" resultType="com.example.friendbe.member.dto.MemberDto">
+		select * 
+		from member_tb 
+		where member_id = #{memberId};
+	</select>
+</mapper>
