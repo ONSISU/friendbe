@@ -21,10 +21,5 @@ public class ChatMessage {
 	private String memberId;
 	private String memberNickname;
 	private String title;
-    public List<ChatRoom> insertChat() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insertChat'");
-    }
-
 
 }

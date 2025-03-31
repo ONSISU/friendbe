@@ -3,25 +3,20 @@ package com.example.friendbe.chatMessage;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.friendbe.chatMessage.dto.ChatMessage;
 import com.example.friendbe.chatMessage.dto.ChatRoom;
 import com.example.friendbe.chatMessage.dto.ChatRoomJoin;
-import com.example.friendbe.member.dto.MemberDto;
-import com.example.friendbe.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +30,8 @@ public class ChatController {
 	@Autowired
     public ChatService chatService;
 
-	private final SimpMessageSendingOperations template;
+	// private final SimpMessageSendingOperations template;
+	private final SimpMessagingTemplate template;
 
 
     @PostMapping("/chatList")
@@ -52,13 +48,13 @@ public class ChatController {
     //     // 메시지를 해당 채팅방 구독자들에게 전송
     
     //     return ResponseEntity.ok().build();
-    // }
+    // }@DestinationVariable String title,
     @MessageMapping("/message/{title}")
     @SendTo("/sub/chatroom/{title}")
-    public ChatMessage receiveMessage(@DestinationVariable String title, @RequestBody ChatMessage chat) {
+    public void receiveMessage(@DestinationVariable String title, @RequestBody ChatMessage chat) {
         // 여기서 chat 객체에 필요한 추가 로직을 수행할 수 있습니다.
-        // template.convertAndSend("/sub/chatroom/${title}", chat);
-        return chat; // 반환된 메시지가 해당 채팅방의 구독자들에게 전송됩니다.
+        template.convertAndSend("/sub/chatroom/" + chat.getTitle(), chat);
+        // return chat; // 반환된 메시지가 해당 채팅방의 구독자들에게 전송됩니다.
     }
     @PostMapping("/insertChat")
     public void insertChat(@RequestBody ChatMessage cmDto){

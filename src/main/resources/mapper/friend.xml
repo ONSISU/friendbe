@@ -5,7 +5,7 @@
 <mapper namespace="com.example.friendbe.friend.repository.FriendRepository">
 
 	<select id="friendList" resultType="com.example.friendbe.friend.dto.FriendDto">
-		select m.member_id, f.friend_id, (select member_info from member_tb where member_id = f.friend_id) memberInfo
+		select m.member_id, f.friend_id, f.friend_no, (select member_info from member_tb where member_id = f.friend_id) memberInfo
 		from friend_tb f join member_tb m on f.member_id = m.member_id
 		where m.member_id = #{memberId};
 	</select>
